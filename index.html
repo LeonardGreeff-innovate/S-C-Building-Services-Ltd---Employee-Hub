@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SC Building — User Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f2b3b" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-align: center;
+      margin: 0; padding: 24px;
+    }
+    .wrap {
+      max-width: 520px; margin: 8vh auto; padding: 28px;
+      border-radius: 16px; box-shadow: 0 6px 24px rgba(0,0,0,.08);
+    }
+    img.logo { height: 64px; margin-bottom: 8px; }
+    h1 { font-size: 22px; margin: 8px 0 20px; font-weight: 600; }
+    input {
+      padding: 18px; margin: 10px 0; width: 100%; font-size: 18px;
+      box-sizing: border-box; border-radius: 10px; border: 1px solid #d0d7de;
+    }
+    button {
+      padding: 14px 24px; font-size: 18px; cursor: pointer;
+      background: #0f766e; color: #fff; border: none; border-radius: 10px;
+      width: 100%; margin-top: 6px;
+    }
+    #message { margin-top: 14px; font-size: 16px; min-height: 22px; }
+    .hint { font-size: 13px; opacity: .7; margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="logo" src="apple-touch-icon.png" alt="SC Building logo" />
+    <h1>SC Building — Employee Hub Login</h1>
+
+    <form onsubmit="event.preventDefault(); checkUser();">
+      <input type="email" id="email" placeholder="Enter your work email" required />
+      <button type="submit">Continue</button>
+    </form>
+
+    <p id="message"></p>
+    <p class="hint">Tip: add this page to your iPhone Home Screen to get the app icon.</p>
+  </div>
+
+  <script>
+    // --- Allowed users (add as needed) ---
+    const users = [
+      { id: 1, email: "sean7colley@gmail.com" },           // Sean (Director)
+      { id: 2, email: "leonardgreeff@glosscalm.com" }      // You (for testing)
+      // Add more like: { id: 3, email: "name@scbuilding.co.uk" }
+    ];
+
+    // --- Optional logging to Google Sheet via Apps Script (replace URL) ---
+    const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
+    function logEmailToSheet(email) {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        mode: "no-cors"
+      }).catch(err => console.error("Logging failed:", err));
+    }
+
+    // --- Login check + redirect ---
+    function checkUser() {
+      const emailInput = document.getElementById("email").value.trim().toLowerCase();
+      const user = users.find(u => u.email.toLowerCase() === emailInput);
+
+      if (user) {
+        document.getElementById("message").innerText = "Access granted. Redirecting…";
+        // Save for downstream pages if needed
+        try { sessionStorage.setItem("scb_user_email", emailInput); } catch (e) {}
+        logEmailToSheet(emailInput);
+
+        // Redirect to the Google Site
+        setTimeout(() => {
+          window.location.href = "https://sites.google.com/view/s-c-building-services-ltd-hub/home";
+        }, 600);
+      } else {
+        document.getElementById("message").innerText = "Email not found. Use your approved work email.";
+      }
+    }
+  </script>
+</body>
+</html>
