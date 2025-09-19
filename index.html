@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SC Building — User Check</title>
+  <title>S C Building Services Ltd — Employee Hub Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0f2b3b" />
 
-  <!-- Icons -->
+  <!-- Icons (kept so iOS/Android still use the app icon when added to Home Screen) -->
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -14,20 +14,22 @@
 
   <style>
     :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       text-align: center;
       margin: 0; padding: 24px;
+      background: Canvas; color: CanvasText;
     }
     .wrap {
-      max-width: 520px; margin: 8vh auto; padding: 28px;
+      max-width: 520px; margin: 10vh auto; padding: 28px;
       border-radius: 16px; box-shadow: 0 6px 24px rgba(0,0,0,.08);
+      background: rgba(127,127,127,0.04);
     }
-    img.logo { height: 64px; margin-bottom: 8px; }
-    h1 { font-size: 22px; margin: 8px 0 20px; font-weight: 600; }
+    h1 { font-size: 26px; margin: 0 0 20px; font-weight: 700; line-height: 1.2; }
     input {
       padding: 18px; margin: 10px 0; width: 100%; font-size: 18px;
-      box-sizing: border-box; border-radius: 10px; border: 1px solid #d0d7de;
+      border-radius: 10px; border: 1px solid #d0d7de; background: Field; color: FieldText;
     }
     button {
       padding: 14px 24px; font-size: 18px; cursor: pointer;
@@ -35,13 +37,11 @@
       width: 100%; margin-top: 6px;
     }
     #message { margin-top: 14px; font-size: 16px; min-height: 22px; }
-    .hint { font-size: 13px; opacity: .7; margin-top: 14px; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <img class="logo" src="apple-touch-icon.png" alt="SC Building logo" />
-    <h1>SC Building — Employee Hub Login</h1>
+    <h1>S C Building Services Ltd — Employee Hub Login</h1>
 
     <form onsubmit="event.preventDefault(); checkUser();">
       <input type="email" id="email" placeholder="Enter your work email" required />
@@ -49,14 +49,13 @@
     </form>
 
     <p id="message"></p>
-    <p class="hint">Tip: add this page to your iPhone Home Screen to get the app icon.</p>
   </div>
 
   <script>
     // --- Allowed users (add as needed) ---
     const users = [
       { id: 1, email: "sean7colley@gmail.com" },           // Sean (Director)
-      { id: 2, email: "leonardgreeff@glosscalm.com" }      // You (for testing)
+      { id: 2, email: "leonardgreeff@glosscalm.com" }      // Leonard (testing)
       // Add more like: { id: 3, email: "name@scbuilding.co.uk" }
     ];
 
@@ -79,7 +78,6 @@
 
       if (user) {
         document.getElementById("message").innerText = "Access granted. Redirecting…";
-        // Save for downstream pages if needed
         try { sessionStorage.setItem("scb_user_email", emailInput); } catch (e) {}
         logEmailToSheet(emailInput);
 
